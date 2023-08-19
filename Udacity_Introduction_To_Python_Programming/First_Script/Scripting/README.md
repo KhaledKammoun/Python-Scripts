@@ -14,4 +14,4 @@ The code snippet in `new_file.py` generates numbers from 0 to 9 and prints wheth
 
 ## Usage
 
-1. Run the `execute_code.py` script to execute the code in `new_file.py`:
+ Run the `execute_code.py` script to execute the code in `new_file.py`
