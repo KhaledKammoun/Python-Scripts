@@ -1,8 +1,8 @@
-def merge_the_tools(string, k):
+def merge_the_tools(string, k): # Time Complextity : O(n)
     n,var = len(string), 0
-    for i in range (0,n//k) :
+    for _ in range (n//k) : # O(n//k)
         x = ""
-        for c in string[var:k+var] :
+        for c in string[var:k+var] : # O(k)
             if not c in x :
                 x+=c
         print(x)
