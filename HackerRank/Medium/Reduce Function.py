@@ -1,17 +1,17 @@
 from fractions import Fraction
 from functools import reduce
-
-
+from math import gcd
+"""
+ the Fraction class handles all the necessary arithmetic
+ operations for fractions, including addition, subtraction,
+ multiplication, and division, and it automatically simplifies
+ the result to its simplest form.
+ """
 def mult(fracs):
-    x, y = 1, 1
+    result = 1 # Fraction(1,1) = 1/1, Fraction is a class .
     for c in fracs:
-        x *= c.numerator
-        y *= c.denominator
-    maxVal = max(x, y)
-    for i in range((maxVal // 2) + 1, 0, -1):
-        if x % i == 0 and y % i == 0:
-            return Fraction(x // i, y // i)
-    return Fraction(x, y)
+        result*=c
+    return result
 
 def product(fracs):
     x = mult(fracs)
