@@ -1,5 +1,14 @@
+# In Space Complexity, we didn't count the arr variable, which requires space to store the input list.
+
 ###########################################
-########## Time Complexity : O(n) #########
+########## Time Complexity : O(1)  ########
+######### Space Complexity : O(1) #########
+###########################################
+
+
+###########################################
+########## Time Complexity : O(n)  ########
+######### Space Complexity : O(1) #########
 ###########################################
 if __name__ == '__main__':
     n = int(input())
@@ -12,8 +21,11 @@ if __name__ == '__main__':
         elif arr[i]<b and arr[i]>a :
             a = arr[i]
     print(a)
+
+
 ###########################################
 ##### Time Complexity : O(n * log(n)) #####
+######    Space Complexity : O(n)    ######
 ###########################################
 """
 if __name__ == '__main__':
