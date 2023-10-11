@@ -9,8 +9,11 @@ def find_mult_3(num):
         if total % 3 == 0 and subset != [] and subset.count(0) != len(subset) :
             array[1] = max(array[1], int("".join([str(c) for c in subset.copy()])))
             t = [0]*10
+            # Add the duplicate numbers to the array 't'
             for c in subset.copy() :
                 t[c]+=1
+
+            # if t[0] > 0 : remove all the possible outcomes with zero at the left side .
             if t[0]>0 :
                 var = factorial(len(subset.copy()) - 1) * (len(subset.copy()) - t[0])
             else :
@@ -31,6 +34,7 @@ def find_mult_3(num):
             subset.append(newNum[i])
             backtracking(newNum, subset, i + 1, total + newNum[i])
             subset.pop()
+            # pass cases, to avoid duplicate arrays
             while i + 1 < len(newNum) and newNum[i] == newNum[i + 1] :
                 i += 1
             i += 1
