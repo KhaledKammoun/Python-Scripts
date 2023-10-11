@@ -6,17 +6,19 @@ def find_mult_3(num):
     result = []
     array = [0,0]
     def backtracking(newNum, subset, start, total) :
-        if total % 3 == 0 and subset != [] and subset !=[0] :
+        if total % 3 == 0 and subset != [] and subset.count(0) != len(subset) :
             array[1] = max(array[1], int("".join([str(c) for c in subset.copy()])))
-            t = [0]*9
+            t = [0]*10
             for c in subset.copy() :
                 t[c]+=1
-            var = factorial(len(subset.copy()))
-            for i in range(1,9) :
+            if t[0]>0 :
+                var = factorial(len(subset.copy()) - 1) * (len(subset.copy()) - t[0])
+            else :
+                var = factorial(len(subset.copy()))
+            for i in range(10) :
                 if (t[i]>0) :
                     var//=factorial(t[i])
-            if (t[0]>0) :
-                var-=(factorial(len(subset.copy()))//(factorial(len(subset.copy()) - t[0])))
+
             array[0]+=var
             result.append(subset.copy())
         elif start >= len(newNum) :
@@ -33,7 +35,4 @@ def find_mult_3(num):
                 i += 1
             i += 1
     backtracking(newNum, [], 0, 0)
-    print(result)
-    print(array)
-
-find_mult_3(6063)
+    return array
