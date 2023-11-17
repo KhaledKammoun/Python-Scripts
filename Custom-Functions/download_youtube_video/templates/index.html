@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Downloader</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>YouTube Downloader</h2>
+    <form method="post">
+        <div class="form-group">
+            <label for="output_path">Download Path:</label>
+            <input type="text" class="form-control" id="output_path" name="output_path" placeholder="Enter the Download Path" required>
+        </div>
+        <div class="form-group">
+            <label for="desition">Select:</label>
+            <select class="form-control" id="desition" name="desition" required>
+                <option value="1">Download Playlist</option>
+                <option value="2">Download Video</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="playlist_url">Playlist URL:</label>
+            <input type="text" class="form-control" id="playlist_url" name="playlist_url" placeholder="Enter the Playlist URL">
+        </div>
+        <div class="form-group">
+            <label for="video_url">Video URL:</label>
+            <input type="text" class="form-control" id="video_url" name="video_url" placeholder="Enter the Video URL">
+        </div>
+        <button type="submit" class="btn btn-primary">Download</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

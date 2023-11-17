@@ -1,5 +1,9 @@
-from pytube import YouTube,Playlist
+from flask import Flask, render_template, request
+from pytube import YouTube, Playlist
 import os
+
+app = Flask(__name__)
+
 def download_playlist(playlist_url, output_path='~/Downloads'):
     try:
         # Create a Playlist object
@@ -16,13 +20,12 @@ def download_playlist(playlist_url, output_path='~/Downloads'):
         for video_url in playlist.video_urls:
             print("Video {} :\n".format(i))
             download_video(video_url, playlist_folder)
-            i+=1
+            i += 1
 
         print("Playlist Download complete!")
 
     except Exception as e:
         print(f"An error occurred: {e}")
-
 
 def download_video(video_url, output_path='~/Downloads'):
     try:
@@ -31,24 +34,29 @@ def download_video(video_url, output_path='~/Downloads'):
 
         video_stream = yt.streams.get_highest_resolution()
 
-        
         # Print video details
         print(f"Downloading: {yt.title}")
         print(f"Resolution: {video_stream.resolution}")
 
         video_stream.download(output_path)
         print("Download complete!")
-        
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        output_path = request.form['output_path']
+        desition = int(request.form['desition'])
+        if desition == 1:
+            playlist_url = request.form['playlist_url']
+            download_playlist(playlist_url, output_path)
+        elif desition == 2:
+            video_url = request.form['video_url']
+            download_video(video_url, output_path)
+
+    return render_template('index.html')
+
 if __name__ == "__main__":
-    output_path = input("Enter The Download Path : ")
-    desition = int(input("Press 1 To Download A PlayList | Press 2 To Download A Video : "))
-    if desition == 1 :
-        playlist_url = input("Enter The PlayList URL : ")
-        download_playlist(playlist_url, output_path)
-    elif desition == 2 :
-        video_url = input("Enter The Video URL : ")
-        download_video(video_url, output_path)
+    app.run(debug=True)
