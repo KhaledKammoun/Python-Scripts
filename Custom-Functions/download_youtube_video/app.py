@@ -27,22 +27,27 @@ def download_playlist(playlist_url, output_path='~/Downloads'):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def download_video(video_url, output_path='~/Downloads'):
+def download_video(video_url, resolution='1080p', output_path='~/Downloads'):
     try:
         # Create a YouTube object
         yt = YouTube(video_url)
 
-        video_stream = yt.streams.get_highest_resolution()
+        # Find a stream with the specified resolution
+        video_stream = yt.streams.filter(res=resolution, file_extension="mp4").first()
 
-        # Print video details
-        print(f"Downloading: {yt.title}")
-        print(f"Resolution: {video_stream.resolution}")
+        if video_stream:
+            # Print video details
+            print(f"Downloading: {yt.title}")
+            print(f"Resolution: {video_stream.resolution}")
 
-        video_stream.download(output_path)
-        print("Download complete!")
+            video_stream.download(output_path)
+            print("Download complete!")
+        else:
+            print(f"No {resolution} stream available for {yt.title}")
 
     except Exception as e:
         print(f"An error occurred: {e}")
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -54,7 +59,7 @@ def index():
             download_playlist(playlist_url, output_path)
         elif desition == 2:
             video_url = request.form['video_url']
-            download_video(video_url, output_path)
+            download_video(video_url, "1080p", output_path)
 
     return render_template('index.html')
 

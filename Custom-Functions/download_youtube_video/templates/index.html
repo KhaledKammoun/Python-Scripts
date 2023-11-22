@@ -22,11 +22,11 @@
                 <option value="2">Download Video</option>
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="playlist_url_group">
             <label for="playlist_url">Playlist URL:</label>
             <input type="text" class="form-control" id="playlist_url" name="playlist_url" placeholder="Enter the Playlist URL">
         </div>
-        <div class="form-group">
+        <div class="form-group" id="video_url_group">
             <label for="video_url">Video URL:</label>
             <input type="text" class="form-control" id="video_url" name="video_url" placeholder="Enter the Video URL">
         </div>
@@ -37,6 +37,31 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // Hide or show the Playlist URL input based on the user's selection
+    $(document).ready(function() {
+        $("#desition").change(function() {
+            var selectedOption = $("#desition").val();
+            if (selectedOption == 1) {
+                $("#playlist_url_group").show();
+                $("#video_url_group").hide();
+            } else if (selectedOption == 2) {
+                $("#playlist_url_group").hide();
+                $("#video_url_group").show();
+            }
+        });
+
+        // Set the initial state based on the default value
+        var initialOption = $("#desition").val();
+        if (initialOption == 1) {
+            $("#playlist_url_group").show();
+            $("#video_url_group").hide();
+        } else if (initialOption == 2) {
+            $("#playlist_url_group").hide();
+            $("#video_url_group").show();
+        }
+    }); 
+</script>
 
 </body>
 </html>
