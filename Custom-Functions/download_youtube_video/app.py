@@ -33,8 +33,8 @@ def download_video(video_url, resolution='1080p', output_path='~/Downloads'):
         yt = YouTube(video_url)
 
         # Find a stream with the specified resolution
-        video_stream = yt.streams.filter(res=resolution, file_extension="mp4").first()
-
+        
+        video_stream = yt.streams.get_highest_resolution()
         if video_stream:
             # Print video details
             print(f"Downloading: {yt.title}")
@@ -47,7 +47,6 @@ def download_video(video_url, resolution='1080p', output_path='~/Downloads'):
 
     except Exception as e:
         print(f"An error occurred: {e}")
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
