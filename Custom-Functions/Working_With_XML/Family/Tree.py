@@ -18,21 +18,24 @@ def print_tree(node, level=0, prefix="Root"):
         print_tree(child, level + 1, f"{prefix}.{child.id}")
 
 
-elements = [TreeNode("1", "abc")]
+elements = [TreeNode("1", "Kammoun"),TreeNode("2", "Khaled"), TreeNode("1", "Frikha")
+            ,TreeNode("2", "Zainab"), TreeNode("3", "Ahmed"), TreeNode("4", "AhmedSon"),
+            TreeNode("1", "Kchaou")
+            , TreeNode("2", "Mouna"), TreeNode("3", "Tarak"),TreeNode("2", "Imed")]
 
-def createTree(root, index, i) :
-    
-    for j in range(i, len(elements)) :
-        if (str(index) == elements[j].id) :
-            root.add_child(elements[j])
-             
-        elif str(index) < elements[j].id and j < len(elements) - 1:
-            createTree(elements[j-1] if j-1>=0 else roote, index + 1, j)
-            
+def createTree(root) :
+    queue = [root, elements[0]]
+    root.add_child(elements[0])
+    for i in range(1, len(elements)) :
+        if elements[i - 1].id < elements[i].id :
+            queue[len(queue) - 1].add_child(elements[i])
         else :
-            return
-        
-roote = TreeNode("0", "Persons")
-createTree(roote, 1, 0)
+            while (elements[i].id <= queue[len(queue) - 1].id) :
+                queue.pop()
+            queue[len(queue) - 1].add_child(elements[i])
+        queue.append(elements[i])
+    return root
+root = TreeNode("0", "Persons")
+createTree(root)
 # Print the tree starting from the root
-print_tree(roote)
+print_tree(root)

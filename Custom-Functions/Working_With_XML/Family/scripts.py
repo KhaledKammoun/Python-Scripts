@@ -51,32 +51,54 @@ class ExcelElementsClass :
         self.description = description
         self.niveau = niveau
     @staticmethod
-    def getAllRowsFromExcel(file) :
+    def getAllRowsFromExcel(sheet):
         elements = []
-        allRowsList = list(workSheet.iter_rows(min_row = 2, max_row = workSheet.max_row))
-        if all(len(row) == 4 for row in allRowsList) :
-            # add rows value to the elements, distinct : id, name, description, niveau
-            for row in allRowsList:
-                elements.append(ExcelElementsClass(*[cell.value for cell in row]))
- 
-        else :
-            print("You have an Error, check Nb Columns and Rows")
+        allRowsList = list(sheet.iter_rows(min_row=2, max_row=sheet.max_row))
+        
+        # add rows value to the elements, distinct: id, name, description, niveau
+        for row in allRowsList:
+            elements.append(TreeNode(ExcelElementsClass(*[cell.value for cell in row][:4])))
+
         return elements
 
 class TreeNode:
     def __init__(self, data):
-        self.data = data # data = the excel row
+        self.data = data
         self.children = []
 
     def add_child(self, child_node):
         self.children.append(child_node)
 
+def print_tree(node, level=0, prefix="Root"):
+    if level == 0:
+        print(f"{prefix} - {node.data.name}")
+    else:
+        indent = " " * (level * 4)
+        print(f"{indent}└── {node.data.niveau} - {node.data.name}")
+
+    for child in node.children:
+        print_tree(child, level + 1, f"{prefix}.{child.data.niveau}")
+
 # contain all the excel rows with distinct value according to ('id', 'name', 'description', 'Niveau')
-elements = ExcelElementsClass.getAllRowsFromExcel('FamilyExcel.xlsx')  
+elements = ExcelElementsClass.getAllRowsFromExcel(workSheet)
 
+def createTree(root) :
+    queue = [root, elements[0]]
+    root.add_child(elements[0])
+    for i in range(1, len(elements)) :
+        if elements[i - 1].data.niveau < elements[i].data.niveau :
+            queue[len(queue) - 1].add_child(elements[i])
+        else :
+            while (elements[i].data.niveau <= queue[len(queue) - 1].data.niveau) :
+                queue.pop()
+            queue[len(queue) - 1].add_child(elements[i])
+        queue.append(elements[i])
+    return root
 # Create a Tree
-root = TreeNode(ExcelElementsClass('0', "Root",None, 0))
+root = TreeNode(ExcelElementsClass('0', "Persons",None, 0))
 
-
-excelFile.save('FamilyExcel.xlsx')
+createTree(root)
+# Print the tree starting from the root
+print_tree(root)
+# excelFile.save('FamilyExcel.xlsx')
 # open_file('FamilyExcel.xlsx')
