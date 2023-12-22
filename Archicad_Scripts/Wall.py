@@ -7,5 +7,5 @@ acc = conn.commands
 act = conn.types
 acu = conn.utilities
 
-walls = act.ClassificationId()
-print(walls)
+walls = acc.GetElementsByType("Wall")
+print(f'Number of Walls: {len(walls)}')
