@@ -9,7 +9,7 @@ def download_playlist(playlist_url, output_path='~/Downloads'):
         # Create a Playlist object
         playlist = Playlist(playlist_url)
         # Create a folder for the playlist
-        playlist_folder = os.path.join(output_path, playlist.title)
+        playlist_folder = os.path.join(output_path, playlist.title.replace(' ','_'))
         os.makedirs(playlist_folder, exist_ok=True)
 
         # Print playlist details
