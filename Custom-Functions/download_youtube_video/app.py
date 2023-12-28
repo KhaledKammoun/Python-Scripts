@@ -27,7 +27,7 @@ def download_playlist(playlist_url, output_path='~/Downloads'):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def download_video(video_url, resolution='1080p', output_path='~/Downloads'):
+def download_video(video_url, output_path='~/Downloads'):
     try:
         # Create a YouTube object
         yt = YouTube(video_url)
@@ -43,7 +43,7 @@ def download_video(video_url, resolution='1080p', output_path='~/Downloads'):
             video_stream.download(output_path)
             print("Download complete!")
         else:
-            print(f"No {resolution} stream available for {yt.title}")
+            print(f"No video stream available for {yt.title}")
 
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -58,7 +58,7 @@ def index():
             download_playlist(playlist_url, output_path)
         elif desition == 2:
             video_url = request.form['video_url']
-            download_video(video_url, "1080p", output_path)
+            download_video(video_url, output_path)
 
     return render_template('index.html')
 
