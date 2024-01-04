@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from pytube import YouTube, Playlist
 import os
-import shutil
+import shutil, subprocess
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
 app = Flask(__name__)
 
@@ -28,27 +28,19 @@ def download_playlist(playlist_url, output_path='~/Downloads'):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def concat_Video_Audio(output_path, videoAudio_path, title) :
-    video_file_path = videoAudio_path + "/video.mp4"
-    audio_file_path = videoAudio_path + "/audio.mp4"
-    output_file_path = output_path + + "/" + title + ".mp4"
+def concat_video_audio(output_path, video_audio_path, title):
+    video_file_path = os.path.join(video_audio_path, "video.mp4")
+    audio_file_path = os.path.join(video_audio_path, "audio.mp3")
+    output_file_path = os.path.join(output_path, title + ".mp4")
 
-    # Load video and audio clips
-    video_clip = VideoFileClip(video_file_path)
-    audio_clip = AudioFileClip(audio_file_path)
-
-    # Make sure the audio clip duration matches the video clip duration
-    audio_clip = audio_clip.subclip(0, video_clip.duration)
-
-    # Set the audio of the video clip to the loaded audio clip
-    video_clip = video_clip.set_audio(audio_clip)
-
-    # Write the result to a file
-    video_clip.write_videofile(output_file_path, codec="libx264", audio_codec="aac")
-
-    # Close the clips
-    video_clip.close()
-    audio_clip.close()
+    # Run FFmpeg to mux audio and video
+    cmd = f'ffmpeg -y -i "{video_file_path}" -i "{audio_file_path}" -filter:a aresample=async=1 -c:a flac -c:v copy "{output_file_path}"'
+    
+    try:
+        subprocess.call(cmd, shell=True)
+        print(f'Muxing Done: {output_file_path}')
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 def download_video(video_url, output_path='~/Downloads', target_resolution = "1080p"):
     try:
@@ -66,7 +58,7 @@ def download_video(video_url, output_path='~/Downloads', target_resolution = "10
         
         new_folder = "/New_Folder"
         # create a new  folder
-        os.makedirs(output_path + new_folder)
+        # os.makedirs(output_path + new_folder)
         # Download first the video without audio
         video_path = output_path + new_folder
         
@@ -82,12 +74,12 @@ def download_video(video_url, output_path='~/Downloads', target_resolution = "10
             print(f"Resolution: {video_stream.resolution}")
 
             # Download the video
-            video_stream.download(video_path, "video.mp4")
+            # video_stream.download(video_path, "video.mp4")
             # Download the audio
-            audio_stream.download(video_path,"audio.mp4")
+            # audio_stream.download(video_path,"audio.mp3")
             
             # Concat video and audio
-            concat_Video_Audio(output_path, video_path, yt.title.replace(" ", "_"))
+            concat_video_audio(output_path, video_path, yt.title.replace(" ", "_"))
 
             # delete the new folder
             shutil.rmtree(output_path + new_folder)
