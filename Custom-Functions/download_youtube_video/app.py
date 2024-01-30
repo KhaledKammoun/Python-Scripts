@@ -37,12 +37,11 @@ def concat_video_audio(output_path, video_audio_path, title):
     final_clip.write_videofile(output_file_path)
 
 
-def download_video(video_url, output_path='~/Downloads',name = "1", target_resolution = "1080p"):
+def download_video(video_url, output_path='~/Downloads',name = "1", target_resolution = "480p"):
     try:
         # Create a YouTube object
         yt = YouTube(video_url)
 
-        target_resolution = "480p"
         
         video_stream = None
         for stream in yt.streams :
@@ -53,13 +52,10 @@ def download_video(video_url, output_path='~/Downloads',name = "1", target_resol
         
         new_folder = "/New_Folder"
         # create a new  folder
-        os.makedirs(output_path + new_folder)
-        # Download first the video without audio
         video_path = output_path + new_folder
-        
-        
+        os.makedirs(video_path)
+
         audio_stream = yt.streams.get_audio_only()
-   
         if video_stream and audio_stream:
             # Print video details
             print(f"Downloading: {yt.title}")
@@ -72,14 +68,12 @@ def download_video(video_url, output_path='~/Downloads',name = "1", target_resol
             
             # Concat video and audio
             concat_video_audio(output_path, video_path, name)
-
-            # delete the new folder
-            shutil.rmtree(output_path + new_folder)
-
-            
             print("Download complete!")
         else:
             print(f"No video stream available for {yt.title}")
+        
+        # delete the new folder
+        shutil.rmtree(output_path + new_folder)
 
     except Exception as e:
         print(f"An error occurred: {e}")
