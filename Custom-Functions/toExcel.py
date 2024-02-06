@@ -52,10 +52,13 @@ data["Items"] = dict()
 data["Items"]["Item"]  = []
 
 for i in range(len(elements)) :
+    # first id must start with 00 not 01
     if (elements[i][1] in [None, '']) :
         index_1 = int(elements[i][0])
         data["Items"]["Item"].append(update(1,elements[i]))
     elif elements[i][2] in ['00', None, ''] :
+        
+        # second id must start with 01 not 00
         if (elements[i][0] != '00') :
             elements[i][1] = str(int(elements[i][1]) + 1).zfill(2)
         index_1 = int(elements[i][0])
@@ -66,17 +69,15 @@ for i in range(len(elements)) :
             data["Items"]["Item"][index_1]["Children"]["Item"].append(update(2,elements[i]))
 
     else :    
-        try : 
-            index_1 = int(elements[i][0])
-            last_level_2_element = data["Items"]["Item"][index_1]["Children"]["Item"]
-            if last_level_2_element[len(last_level_2_element) -  1]["Children"] == "" :
+        # thrid id must start with 01 not 00
+        index_1 = int(elements[i][0])
+        last_level_2_element = data["Items"]["Item"][index_1]["Children"]["Item"]
+        if last_level_2_element[len(last_level_2_element) -  1]["Children"] == "" :
 
-                last_level_2_element[len(last_level_2_element) -  1]["Children"] = {"Item" : [update(3,elements[i])]}
-            else :
+            last_level_2_element[len(last_level_2_element) -  1]["Children"] = {"Item" : [update(3,elements[i])]}
+        else :
+            last_level_2_element[len(last_level_2_element) -  1]["Children"]["Item"].append(update(3, elements[i]))
 
-                last_level_2_element[len(last_level_2_element) -  1]["Children"]["Item"].append(update(3, elements[i]))
-        except IndexError as e :
-            print("Index : ", 0)
 
 # for element in elements :
 #     print(element)
