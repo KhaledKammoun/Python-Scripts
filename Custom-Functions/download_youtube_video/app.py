@@ -21,7 +21,11 @@ def download_playlist(playlist_url, output_path='~/Downloads'):
         i = 1
         for video_url in playlist.video_urls:
             print("Video {} :\n".format(i))
-            download_video(video_url, playlist_folder, str(i))
+            filename = str(i) + ".mp4"
+            if os.path.exists(os.path.join(playlist_folder, filename)):
+                print("{} already exists in the folder.".format(filename))
+            else:
+                download_video(video_url, playlist_folder, str(i))
             i += 1
 
         print("Playlist Download complete!")

@@ -1,0 +1,84 @@
+import json
+from openpyxl import load_workbook
+
+def getAllRowsFromExcel(sheet):
+    elements = []
+    allRowsList = list(sheet.iter_rows(min_row=2, max_row=sheet.max_row))
+    
+    # add rows value to the elements, distinct: id, name, description, niveau
+    for row in allRowsList:
+        elements.append([cell.value for cell in row][:6])
+    return elements
+input_path = "~/khaled_excel.xlsx"
+excelFile = load_workbook(input_path, read_only=True)
+workSheet = excelFile.active
+elements = getAllRowsFromExcel(workSheet)
+
+additional_data = {
+    "M": "",
+    "Q_manuelle": None,
+    "Q_auto": None,
+    "prix_u": None,
+    "APS": None,
+    "APD": None,
+    "Dossier_C": None,
+    "Marche": None
+}
+def update(level, item) :
+    data_var = item
+    item = {}
+    if (level == 1) :
+        item["ID"] = int(data_var[0])
+    elif level == 2 :
+        item["ID"] = data_var[0] + "|" + data_var[1] + "|00"
+    else :
+        item["ID"] = data_var[0] + "|" + data_var[1] + "|" + data_var[2]
+    item["Name"] = data_var[3]
+    item["U"] = data_var[4]
+    for key, value in additional_data.items():
+        item[key] = value
+    if (not data_var[5]) :
+        item["Description"] = ""
+    else :
+        item["Description"] = [data_var[5]]
+    item["Children"] = ""
+
+    
+    return item
+
+
+data = dict()
+data["Items"] = dict()
+data["Items"]["Item"]  = []
+
+for i in range(len(elements)) :
+    if (elements[i][1] in [None, '']) :
+        index_1 = int(elements[i][0])
+        data["Items"]["Item"].append(update(1,elements[i]))
+    elif elements[i][2] in ['00', None, ''] :
+        if (elements[i][0] != '00') :
+            elements[i][1] = str(int(elements[i][1]) + 1).zfill(2)
+        index_1 = int(elements[i][0])
+        children = data["Items"]["Item"][index_1]["Children"]
+        if children == "":
+            data["Items"]["Item"][index_1]["Children"] = {"Item" : [update(2,elements[i])]}
+        else :
+            data["Items"]["Item"][index_1]["Children"]["Item"].append(update(2,elements[i]))
+
+    else :    
+        try : 
+            index_1 = int(elements[i][0])
+            last_level_2_element = data["Items"]["Item"][index_1]["Children"]["Item"]
+            if last_level_2_element[len(last_level_2_element) -  1]["Children"] == "" :
+
+                last_level_2_element[len(last_level_2_element) -  1]["Children"] = {"Item" : [update(3,elements[i])]}
+            else :
+
+                last_level_2_element[len(last_level_2_element) -  1]["Children"]["Item"].append(update(3, elements[i]))
+        except IndexError as e :
+            print("Index : ", 0)
+
+# for element in elements :
+#     print(element)
+with open('your_file.json', 'w', encoding='utf-8') as file:
+    json.dump(data, file, indent=2, ensure_ascii=False)
