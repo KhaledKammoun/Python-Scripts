@@ -22,8 +22,8 @@ def update(item) :
     item["Name"] = data_var["Name"]
     for key, value in additional_data.items():
         item[key] = value
-    if (not item["Description"]) :
-        item["Description"] = ""
+    if (not data_var["Description"]) :
+        item["Description"] = None
     else :
         item["Description"] = [data_var["Description"]]
         

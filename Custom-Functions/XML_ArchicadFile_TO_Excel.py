@@ -13,11 +13,14 @@ def return_row(item, niveau) :
     elif niveau == 2 or len(item.find("ID").text) == 5:
         id_value = "{}|00".format(item.find("ID").text)
 
-    name_value = item.find("Name").text if (not item.find("Name")) else ""
+    name_value = item.find("Name").text if item.find("Name") is not None else ""
 
     description = item.find("Description").text
 
-    return [id_value, name_value, description, niveau]
+    try :
+        return [id_value, name_value, description, niveau]
+    except :
+        return []
 def convert_xml_to_excel(input_file, output = "", output_file_name = "new_file") :
     # XML File
     tree = etree.parse(input_file)
@@ -52,3 +55,5 @@ def convert_xml_to_excel(input_file, output = "", output_file_name = "new_file")
         wb.save("{}.xlsx".format(output_file_name))
     else :
         wb.save(output_file_name)
+
+convert_xml_to_excel("NUNACE-2024.xml")
