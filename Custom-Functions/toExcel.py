@@ -15,14 +15,19 @@ workSheet = excelFile.active
 elements = getAllRowsFromExcel(workSheet)
 
 additional_data = {
-    "M": "",
+    "Marge": None,
     "Q_manuelle": None,
     "Q_auto": None,
-    "prix_u": None,
-    "APS": None,
-    "APD": None,
-    "Dossier_C": None,
-    "Marche": None
+    
+    "Prix_U_APS" : None,
+    "Prix_U_APD" : None,
+    "Prix_U_Dossier_C" : None,
+    "Prix_U_Marche" : None,
+
+    "Q_APS" : None,
+    "Q_APD" : None,
+    "Q_Dossier_C" : None,
+    "Q_Marche" : None
 }
 def update(level, item) :
     data_var = item
@@ -59,8 +64,6 @@ for i in range(len(elements)) :
     elif elements[i][2] in ['00', None, ''] :
         
         # second id must start with 01 not 00
-        if (elements[i][0] != '00') :
-            elements[i][1] = str(int(elements[i][1]) + 1).zfill(2)
         index_1 = int(elements[i][0])
         children = data["Items"]["Item"][index_1]["Children"]
         if children == "":
