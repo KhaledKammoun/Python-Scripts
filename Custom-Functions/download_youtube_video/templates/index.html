@@ -20,6 +20,7 @@
             <select class="form-control" id="desition" name="desition" required>
                 <option value="1">Download Playlist</option>
                 <option value="2">Download Video</option>
+                <option value="3">Custom Playlist</option>
             </select>
         </div>
         <div class="form-group" id="playlist_url_group">
@@ -30,6 +31,10 @@
             <label for="video_url">Video URL:</label>
             <input type="text" class="form-control" id="video_url" name="video_url" placeholder="Enter the Video URL">
         </div>
+        <div class="form-group" id="custom_playlist_group" style="display: none;">
+            <label for="custom_playlist">Enter video URLs (one per line):</label>
+            <textarea id="custom_playlist" class="form-control" rows="5" name="custom_playlist" placeholder="Paste or enter video URLs here"></textarea>
+        </div>
         <button type="submit" class="btn btn-primary">Download</button>
     </form>
 </div>
@@ -38,30 +43,39 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    // Hide or show the Playlist URL input based on the user's selection
+    // Hide or show input groups based on user selection
     $(document).ready(function() {
         $("#desition").change(function() {
-            var selectedOption = $("#desition").val();
+            var selectedOption = $(this).val();
             if (selectedOption == 1) {
                 $("#playlist_url_group").show();
                 $("#video_url_group").hide();
+                $("#custom_playlist_group").hide();
             } else if (selectedOption == 2) {
                 $("#playlist_url_group").hide();
                 $("#video_url_group").show();
+                $("#custom_playlist_group").hide();
+            } else if (selectedOption == 3) {
+                $("#playlist_url_group").hide();
+                $("#video_url_group").hide();
+                $("#custom_playlist_group").show();
             }
         });
 
-        // Set the initial state based on the default value
+        // Set initial state based on default value
         var initialOption = $("#desition").val();
         if (initialOption == 1) {
             $("#playlist_url_group").show();
             $("#video_url_group").hide();
+            $("#custom_playlist_group").hide();
         } else if (initialOption == 2) {
             $("#playlist_url_group").hide();
             $("#video_url_group").show();
+            $("#custom_playlist_group").hide();
+        } else if (initialOption == 3) {
+            $("#playlist_url_group").hide();
+            $("#video_url_group").hide();
+            $("#custom_playlist_group").show();
         }
-    }); 
+    });
 </script>
-
-</body>
-</html>

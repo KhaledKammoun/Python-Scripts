@@ -33,6 +33,39 @@ def download_playlist(playlist_url, output_path='~/Downloads'):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+# playlist_data : dictionary containing "title" and "videos" as lists
+def download_custom_playlist(playlist_data, output_path):
+    try:
+        # Create a folder for the playlist
+        playlist_folder = os.path.join(output_path, playlist_data["title"].replace(' ', '_'))
+        os.makedirs(playlist_folder, exist_ok=True)
+
+        # Print playlist details
+        print(f"Downloading playlist: {playlist_data['title']}")
+
+        for i, video_url in enumerate(playlist_data["videos"]):
+            if not video_url:
+                print(f"Skipping empty URL at index {i + 1}")
+                continue  # Skip empty URLs
+
+            try:
+                yt = YouTube(video_url)
+                video_title = yt.title
+                # Extract video number if it's a digit at the end of the title
+                video_number = [title for title in video_title.split() if title.isdigit()][-1]
+                print("Video {} :\n".format(i + 1))
+
+                filename = f"{video_number}.mp4"  # Use extracted video number or default
+
+                if os.path.exists(os.path.join(playlist_folder, filename)):
+                    print(f"{filename} already exists in the folder.")
+                else:
+                    download_video(video_url, playlist_folder, filename)  # Download with filename
+            except Exception as e:
+                print(f"Error downloading video {i + 1}: {e}")
+
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 def concat_video_audio(output_path, video_audio_path, title):
     video = VideoFileClip(video_audio_path + "/video.mp4")
     audio = AudioFileClip(video_audio_path + "/audio.mp3")
@@ -87,6 +120,7 @@ def index():
     if request.method == 'POST':
         output_path = request.form['output_path']
         desition = int(request.form['desition'])
+
         if desition == 1:
             playlist_url = request.form['playlist_url']
             download_playlist(playlist_url, output_path)
@@ -94,8 +128,15 @@ def index():
             video_url = request.form['video_url']
             target_resolution = "480p"
             download_video(video_url, output_path, target_resolution)
+        elif desition == 3:
+            # Extract URLs from the custom playlist text area
+            custom_playlist = request.form['custom_playlist']
+            urls = custom_playlist.splitlines()  # Split by line breaks
+
+            # Create a dictionary for custom playlist information
+            playlist_data = {"title": "Custom_Playlist", "videos": urls}
+            download_custom_playlist(playlist_data, output_path)
 
     return render_template('index.html')
-
 if __name__ == "__main__":
     app.run(debug=True)
