@@ -66,6 +66,7 @@ def download_custom_playlist(playlist_data, output_path):
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+
 def concat_video_audio(output_path, video_audio_path, title):
     video = VideoFileClip(video_audio_path + "/video.mp4")
     audio = AudioFileClip(video_audio_path + "/audio.mp3")
@@ -86,13 +87,18 @@ def download_video(video_url, output_path='~/Downloads',name = "1", target_resol
                 video_stream = stream
                 break
         
-        
+        audio_stream = yt.streams.get_audio_only()
+
+        if not audio_stream or not video_stream :
+            print("No Video or Audio")
+            return 
+
         new_folder = "/New_Folder"
         # create a new  folder
         video_path = output_path + new_folder
         os.makedirs(video_path)
 
-        audio_stream = yt.streams.get_audio_only()
+        
         if video_stream and audio_stream:
             # Print video details
             print(f"Downloading: {yt.title}")
@@ -110,9 +116,10 @@ def download_video(video_url, output_path='~/Downloads',name = "1", target_resol
             print(f"No video stream available for {yt.title}")
         
         # delete the new folder
-        shutil.rmtree(output_path + new_folder)
+        shutil.rmtree(video_path)
 
     except Exception as e:
+        shutil.rmtree(video_path)
         print(f"An error occurred: {e}")
 
 @app.route('/', methods=['GET', 'POST'])
@@ -126,7 +133,7 @@ def index():
             download_playlist(playlist_url, output_path)
         elif desition == 2:
             video_url = request.form['video_url']
-            target_resolution = "480p"
+            target_resolution = "1080p"
             download_video(video_url, output_path, target_resolution)
         elif desition == 3:
             # Extract URLs from the custom playlist text area
