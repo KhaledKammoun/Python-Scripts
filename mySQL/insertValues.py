@@ -1,4 +1,6 @@
 import pymysql
+import psycopg2
+
 import os
 from openpyxl import load_workbook
 from dotenv import load_dotenv
@@ -22,12 +24,23 @@ elements = getAllRowsFromExcel(workSheet)
 
 load_dotenv()
 # Connect to the MySQL database
-connection = pymysql.connect(
+# connection = pymysql.connect(
+#     host=os.environ.get('MYSQL_HOST'),
+#     user=os.environ.get('MYSQL_USER'),
+#     password=os.environ.get('MYSQL_PASSWORD'),
+#     database=os.environ.get('MYSQL_DATABASE')
+# )
+
+# Connect to PostgreSQL
+connection = psycopg2.connect(
     host=os.environ.get('MYSQL_HOST'),
     user=os.environ.get('MYSQL_USER'),
     password=os.environ.get('MYSQL_PASSWORD'),
-    database=os.environ.get('MYSQL_DATABASE')
+    database=os.environ.get('MYSQL_DATABASE'),
+    port=os.environ.get('PORT')
+
 )
+
 # Create a cursor object
 cursor = connection.cursor()
 sql = "INSERT INTO articles (lotArticleID, lotID, articleContent, parentArticle, userID) VALUES (%s, %s, %s, %s, %s)"
@@ -46,7 +59,6 @@ try:
             values = (id+"|00|00", 1, name, None, 1)
             # Execute the SQL query
             # cursor.execute(sql, values)
-            # print("***1 : ", values)
             # print("{} : Data inserted successfully!".format(i))
         else :
             id1, id2, id3 = id.split('|')
@@ -55,7 +67,7 @@ try:
                 # get articleID
                 cursor.execute(sql_getArticleID, (id,))
                 result = cursor.fetchone()  # Fetch the first row
-                # print("ID : ", id)
+                print("ID : ", id)
                 values_descriptif = (result[0], descriptif)
                 cursor.execute(sql_descriptif, values_descriptif)
 
@@ -73,7 +85,7 @@ try:
                     # get articleID
                     cursor.execute(sql_getArticleID, (id,))
                     result = cursor.fetchone()  # Fetch the first row
-                    # print("ID : ", result[0])
+                    print("ID : ", result[0])
                     values_descriptif = (result[0], descriptif)
                     cursor.execute(sql_descriptif, values_descriptif)
             else :
