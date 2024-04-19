@@ -6,6 +6,10 @@ with open('articles.json', 'r', encoding='utf-8') as file:
 
 additional_data = {
     "U": "",
+    "M": "",
+    "Q_manuelle": None,
+    "Q_auto": None,
+    "prix_u": None,
     "APS": None,
     "APD": None,
     "Dossier_C": None,
@@ -18,7 +22,11 @@ def update(item) :
     item["Name"] = data_var["Name"]
     for key, value in additional_data.items():
         item[key] = value
-    item["Description"] = data_var["Description"]
+    if (not data_var["Description"]) :
+        item["Description"] = None
+    else :
+        item["Description"] = [data_var["Description"]]
+        
     item["Children"] = data_var["Children"]
     return item
 

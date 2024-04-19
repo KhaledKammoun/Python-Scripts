@@ -1,5 +1,6 @@
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 import lxml.etree as etree
+
 """
 XML Functions
 """
@@ -118,5 +119,22 @@ def createXMLFile(input_path, output_path) :
     # open_file(input_path)
 
 
+# return a row with ID, Name, Description and Niveau
+def return_row(item, niveau) :
+    pass
 
+# get an xml input file and convert it to an excel file
+def convert_xml_to_excel(input_file, output_file) :
+    # XML File
+    tree = etree.parse(input_file)
+    
+    xpath_expression = "/BuildingInformation/Classification/System/Items/Item"
+    items = tree.xpath(xpath_expression)
+
+    # Create new Excel File
+    wb = Workbook()
+    ws = wb.active
+    ws.append(["ID", "Name", "Description", "Niveau"])
+    
+    # Call return_row to each Item and add it to the excel Sheet
 
