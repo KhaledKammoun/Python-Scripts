@@ -21,13 +21,15 @@ def download_playlist(playlist_url, output_path='~/Downloads'):
         i = 1
         for video_url in playlist.video_urls:
             print("Video {} :\n".format(i))
-            download_video(video_url, playlist_folder, str(i))
+            if (i >= 10) :
+                download_video(video_url, playlist_folder, str(i))
             i += 1
 
         print("Playlist Download complete!")
 
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred while downloading playlist: {playlist.title}")
+        print(f"Error details: {e}")
 
 def concat_video_audio(output_path, video_audio_path, title):
     video = VideoFileClip(video_audio_path + "/video.mp4")
@@ -37,23 +39,25 @@ def concat_video_audio(output_path, video_audio_path, title):
     final_clip.write_videofile(output_file_path)
 
 
-def download_video(video_url, output_path='~/Downloads',name = "1", target_resolution = "480p"):
+def download_video(video_url, output_path='~/Downloads', name="1", target_resolution="480p"):
     try:
+        
+
         # Create a YouTube object
         yt = YouTube(video_url)
-
-        
+        # video_stream = yt.streams.get_highest_resolution()
         video_stream = None
-        for stream in yt.streams :
-            if stream.resolution == target_resolution and stream.mime_type =="video/mp4":
+        print(yt.streams)
+        for stream in yt.streams:
+            if stream.resolution == target_resolution and stream.mime_type == "video/mp4":
                 video_stream = stream
                 break
-        
-        
+        print(video_stream)
+        print("111")            
         new_folder = "/New_Folder"
         # create a new  folder
         video_path = output_path + new_folder
-        os.makedirs(video_path)
+        os.makedirs(video_path, exist_ok=True)
 
         audio_stream = yt.streams.get_audio_only()
         if video_stream and audio_stream:
@@ -64,16 +68,16 @@ def download_video(video_url, output_path='~/Downloads',name = "1", target_resol
             # Download the video
             video_stream.download(video_path, "video.mp4")
             # Download the audio
-            audio_stream.download(video_path,"audio.mp3")
-            
+            audio_stream.download(video_path, "audio.mp3")
+
             # Concat video and audio
             concat_video_audio(output_path, video_path, name)
             print("Download complete!")
         else:
             print(f"No video stream available for {yt.title}")
-        
+
         # delete the new folder
-        shutil.rmtree(output_path + new_folder)
+        shutil.rmtree(video_path)
 
     except Exception as e:
         print(f"An error occurred: {e}")
