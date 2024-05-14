@@ -4,8 +4,6 @@ import os
 import shutil
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
 
-app = Flask(__name__)
-
 def download_playlist(playlist_url, output_path='~/Downloads'):
     try:
         # Create a Playlist object
@@ -47,7 +45,7 @@ def download_video(video_url, output_path='~/Downloads', name="1", target_resolu
         yt = YouTube(video_url)
         # video_stream = yt.streams.get_highest_resolution()
         video_stream = None
-        print(yt.streams)
+        # print(yt.streams)
         for stream in yt.streams:
             if stream.resolution == target_resolution and stream.mime_type == "video/mp4":
                 video_stream = stream
@@ -56,7 +54,7 @@ def download_video(video_url, output_path='~/Downloads', name="1", target_resolu
         if (video_stream == None) : 
             # Get the highest resolution stream
             stream = yt.streams.get_highest_resolution()
-            print("1080p quality not exist !!!")
+            # print("1080p quality not exist !!!")
             
             print(f"Downloading: {yt.title}")
             print(f"Resolution: {stream.resolution}")
@@ -65,11 +63,12 @@ def download_video(video_url, output_path='~/Downloads', name="1", target_resolu
             stream.download(output_path, name)
             print("Download complete!")
         else :
-            print(video_stream)
-            print("111")            
+            # print(video_stream)
+            # print("111")            
             new_folder = "/New_Folder"
             # create a new  folder
             video_path = output_path + new_folder
+            print("Video Path : ", video_path)
             os.makedirs(video_path, exist_ok=True)
 
             audio_stream = yt.streams.get_audio_only()
@@ -89,26 +88,46 @@ def download_video(video_url, output_path='~/Downloads', name="1", target_resolu
             else:
                 print(f"No video stream available for {yt.title}")
 
-        # delete the new folder
-        shutil.rmtree(video_path)
+        if 'video_path' in locals():
+            shutil.rmtree(video_path)
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
-@app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        output_path = request.form['output_path']
-        desition = int(request.form['desition'])
+
+    while True : 
+        print("-----------------------------------------------")
+        print("-------------- YOUTUBE DOWNLOADER -------------")
+        print("-------    POWERED BY KHALED KAMMOUN    -------")
+        print("-----------------------------------------------")
+        output_path = input("--- Download Path : ")
+        print("--- SELECT ---")
+        print("----- 1 : Download Playlist")
+        print("----- 2 : Download Video")
+        print("----- 3 : Download Custom Playlist")
+        desition = int(input("--- TYPE 1, 2 or 3 : "))
+
+        if desition in [1, 2] :
+            string_var = "Playlist" if desition == 1 else "Video"
+            url = input(f"--- {string_var} url : ")
+        else :
+            url_list = []
+            url_var = ""
+            
+            while url_var.lower() != "q" :
+                url_var = input(f"--- Video {len(url_list) + 1} : ")
+                url_list.append(url_var)
+
         if desition == 1:
-            playlist_url = request.form['playlist_url']
-            download_playlist(playlist_url, output_path)
+            download_playlist(url, output_path)
         elif desition == 2:
-            video_url = request.form['video_url']
             target_resolution = "480p"
-            download_video(video_url, output_path, target_resolution)
+            download_video(url, output_path, target_resolution)
+        
 
-    return render_template('index.html')
+        stop_condition = input("--- Press q to quit : ") 
+        if stop_condition == 'q' : 
+            break
 
-if __name__ == "__main__":
-    app.run(debug=True)
+index()
