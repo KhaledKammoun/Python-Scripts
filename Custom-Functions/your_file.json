@@ -2700,9 +2700,7 @@
                     "Q_APD": null,
                     "Q_Dossier_C": null,
                     "Q_Marche": null,
-                    "Description": [
-                      "descriptif manquant"
-                    ],
+                    "Description": ["descriptif manquant"],
                     "Children": ""
                   },
                   {

@@ -72,8 +72,9 @@ def update_folder(source_dir, destination_dir):
                 os.remove(dest_file)
                 print(f"Removed: {dest_file}")
 if __name__ == "__main__":
-    source_directory = "C:/Users/USER/Desktop/Python"
-    destination_directory = "D:/Python"
+    
+    source_directory = "~/Desktop/Python"
+    destination_directory = "~/Python"
     update_folder(source_directory, destination_directory)
     """
     if are_folders_identical(source_directory, destination_directory):

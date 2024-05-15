@@ -1,6 +1,7 @@
 import json
 
-with open('articles.json', 'r', encoding='utf-8') as file:
+
+with open('your json file ...', 'r', encoding='utf-8') as file:
     data = json.load(file)
 
 

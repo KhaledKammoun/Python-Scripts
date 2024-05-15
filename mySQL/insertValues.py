@@ -73,7 +73,7 @@ try:
 
             elif not int(id3) :
                 # if the third id is 0, add article to the data base with descriptif if there .
-                # id_parent = (id1 + "|00|00")
+                id_parent = (id1 + "|00|00")
                 # sql = "INSERT INTO articles (lotArticleID, lotID, articleContent, parentArticle, userID) VALUES (%s, %s, %s, %s, %s)"
                 # cursor.execute(sql_getArticleID, (id_parent,))
                 # parentArticleID = cursor.fetchone()  # Fetch the first row
@@ -91,7 +91,7 @@ try:
             else :
                 # if the third id is not 0, add article to the data base with descriptif if there .
                 
-                # id_parent = (id1 + "|"+id2+"|00")
+                id_parent = (id1 + "|"+id2+"|00")
                 # sql = "INSERT INTO articles (lotArticleID, lotID, articleContent, parentArticle, userID) VALUES (%s, %s, %s, %s, %s)"
                 # cursor.execute(sql_getArticleID, (id_parent,))
                 # parentArticleID = cursor.fetchone()  # Fetch the first row

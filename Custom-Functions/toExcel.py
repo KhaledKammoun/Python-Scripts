@@ -9,7 +9,7 @@ def getAllRowsFromExcel(sheet):
     for row in allRowsList:
         elements.append([cell.value for cell in row][:6])
     return elements
-input_path = "khaled_excel.xlsx"
+input_path = "your_excel_file.xlsx"
 excelFile = load_workbook(input_path, read_only=True)
 workSheet = excelFile.active
 elements = getAllRowsFromExcel(workSheet)
