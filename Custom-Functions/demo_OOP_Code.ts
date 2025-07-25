@@ -227,7 +227,7 @@ export class User {
           last_update,
           client_name,
         },
-        tableName: "user_project",
+        tableName: "projects",
       };
 
       try {
